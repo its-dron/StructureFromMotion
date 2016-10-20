@@ -6,7 +6,7 @@ function [ E ] = computeE( pts1, pts2 )
 nPoints = size(pts1,2);
 
 % Check for same dimensions between point sets
-isequal(size(pts1), size(pts2));
+assert(isequal(size(pts1), size(pts2)), 'Matrix dimensions must agree.');
 
 % Enforce Homogenous Coordinate Style
 if size(pts1,2) ~= 3
