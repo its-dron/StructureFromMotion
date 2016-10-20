@@ -13,11 +13,11 @@ function [ ptsConditioned, transform ] = preconditionPts( pts, avgDist )
 %% Check Inputs 
 pts = pts(1:2,:);
 
-if ~isscalar(avgDist)
-    error('Optional Input avgDist must be a scalar');
-end
 if nargin < 2
     avgDist = sqrt(2);
+end
+if ~isscalar(avgDist)
+    error('Optional Input avgDist must be a scalar');
 end
 
 %% Compute
