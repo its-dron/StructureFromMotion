@@ -23,12 +23,15 @@ end
 naiveE = eightPtAlgo( pts1Conditioned, pts2Conditioned );
 
 %% Postcondition
-% Enforce only 5 independent parameters
-[U, S, V] = svd(naiveE, 'econ');
-robustE = U * diag([1 1 0]) * V';
-
 % Rescale back to original coordinate system.
-E = T1' * robustE * T2;
+naiveE = T1' * naiveE * T2;
+% naiveE = T1 * naiveE * T2';
+
+[U, ~, V] = svd(naiveE, 'econ');
+
+% Enforce only 5 independent parameters
+E = U * diag([1 1 0]) * V';
+
 
 end
 

@@ -8,4 +8,4 @@ T = [x; y; z];
 
 pt = K*[R,T]*P;
 pt = pt(1:2) / pt(3);
-error = norm(p-pt);
+error = norm(p-pt)^2;
