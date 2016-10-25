@@ -9,7 +9,7 @@ nPoints = size(pts1,2);
 assert(isequal(size(pts1), size(pts2)), 'Matrix dimensions must agree.');
 
 % Enforce Homogenous Coordinate Style
-if size(pts1,2) ~= 3
+if size(pts1,1) ~= 3
     pts1 = [pts1(1:2,:); ones(1,nPoints)];
     pts2 = [pts2(1:2,:); ones(1,nPoints)];
 end
