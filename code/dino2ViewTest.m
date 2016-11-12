@@ -31,8 +31,10 @@ cameraParameterDelimiter = ' ';
 cameraParameterNHeadLines = 1;
 
 %% Load images and camera intrinsics
-im1color = imread(im1FullPath);
-im2color = imread(im2FullPath);
+im1Color = imread(im1FullPath);
+im2Color = imread(im2FullPath);
+im1Gray = single(rgb2gray(im1Color));
+im2Gray = single(rgb2gray(im2Color));
 
 % cameraParameterReadIn is a struct with two fields:
 %   data
@@ -71,12 +73,15 @@ fprintf('VLFeat Version: %s.\n', vl_version);
             SIFT( {im1FullPath, im2FullPath}, matchThresh );
         
 %% Debug Test Plot
-figure;imagesc(im1color);
+figure;imagesc(im1Color);
 hold on;
 vl_plotframe(features{1});
-figure;imagesc(im2color);
+figure;imagesc(im2Color);
 hold on;
 vl_plotframe(features{2});
 
 %% Estimate F using RANSAC
-% [ F, bestInlierIdx ] = ransacF( pts1, pts2, M );
+pts1 = features{1}(1:2, matches{1,2}(1,:))'; % each row is an (x,y) coordinate
+pts2 = features{2}(1:2, matches{1,2}(2,:))';
+M = max([size(im1Gray), size(im2Gray)]); %max image dimension
+[ F, bestInlierIdx ] = ransacF( pts1, pts2, M );
