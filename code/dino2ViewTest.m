@@ -18,7 +18,7 @@ matchThresh = 1.5;
 
 dinoDir = fullfile('..','data','dino');
 im1Number = 1;
-im2Number = 3;
+im2Number = 2;
 im1Filename = ['dino' num2str(im1Number, '%04d') '.png'];
 im2Filename = ['dino' num2str(im2Number, '%04d') '.png'];
 im1FullPath = fullfile(dinoDir, im1Filename);
@@ -49,7 +49,7 @@ cameraParameterReadIn.textdata(1) = []; %first value is garbage
 %% Parse Camera Intrinsics
 nImages = size(cameraParameterReadIn.textdata, 1);
 for i = 1:nImages
-    rowData = cameraParameterReadIn.data;
+    rowData = cameraParameterReadIn.data(i,:);
     if strcmp(cameraParameterReadIn.textdata{i}, im1Filename)
         K1 = vec2mat(rowData(1:9), 3);
         R1 = vec2mat(rowData(10:18), 3);
@@ -89,6 +89,8 @@ pts1 = features{1}(1:2, matches{1,2}(1,:))'; % each row is an (x,y) coordinate
 pts2 = features{2}(1:2, matches{1,2}(2,:))';
 M = max([size(im1Gray), size(im2Gray)]); %max image dimension
 [ F, bestInlierIdx ] = ransacF( pts1, pts2, M );
+pts1 = pts1(bestInlierIdx, :);
+pts2 = pts2(bestInlierIdx, :);
 
 %% Debug, Check F by epipolar match gui
 if debug
@@ -120,8 +122,8 @@ for i = 1:4
 end
 
 %% Triangulate
-[ P, error ] = triangulate( M1, pts1(bestInlierIdx, :), ...
-                            M2, pts2(bestInlierIdx, :) );
+[ P, error ] = triangulate( M1, pts1, ...
+                            M2, pts2);
 
 %% 3D Plot
 figure;

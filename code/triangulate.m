@@ -31,16 +31,16 @@ p2Hat = bsxfun(@rdivide, p2Hat(1:2,:), p2Hat(3,:)); %normalize
 error = sum([sum((p1-p1Hat').^2, 2); sum((p2-p2Hat').^2, 2)]);
 
 %% Debug Plot
-figure;
-scatter(p1(:,1),p1(:,2),'o');
-hold on
-scatter(p1Hat(1,:), p1Hat(2,:),'x');
-figure;
-scatter(p2(:,1),p2(:,2),'o');
-hold on
-scatter(p2Hat(1,:),p2Hat(2,:),'x');
-figure;
-scatter3(P(:,1),P(:,2),P(:,3));
+% figure;
+% scatter(p1(:,1),p1(:,2),'o');
+% hold on
+% scatter(p1Hat(1,:), p1Hat(2,:),'x');
+% figure;
+% scatter(p2(:,1),p2(:,2),'o');
+% hold on
+% scatter(p2Hat(1,:),p2Hat(2,:),'x');
+% figure;
+% scatter3(P(:,1),P(:,2),P(:,3));
 
 %% Crop output
 P = P(:,1:3);
