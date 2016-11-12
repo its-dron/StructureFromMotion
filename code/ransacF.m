@@ -33,7 +33,8 @@ for i = 1:nItr
     [ Fs ] = sevenpoint( pts17, pts27, M );
     for j = 1: length(Fs)
         F = Fs{j};
-        nInlier = countInliers(pts1H, pts2H, F, squaredRadius);
+        inlierIdx = findInliers(pts1H, pts2H, F, squaredRadius);
+        nInlier = nnz(inlierIdx);
         if nInlier > nBestInliers
             bestInlierIdx = inlierIdx;
             nBestInliers = nInlier;
@@ -45,22 +46,17 @@ end
 [ F ] = eightpoint( pts1(bestInlierIdx, :), pts2(bestInlierIdx, :), M );
 end
 
-% Count the number of inliers
-function [numInliers] = countInliers(pts1, pts2, F, tol)
-    numInliers = nnz( findInliers(pts1, pts2, F, tol) );
-end
-
 % Return a boolean array representing which points are inliers
 function [inlierIdxs] = findInliers(pts1, pts2, F, tol)
-    w1 = pts1*F'; % w1 - epipolar lines
-    n1 = sqrt(sum(w1(:,1:2).^2, 2)); % sqrt(a^2 + b^2)
+    w1 = F*pts1; % w1 - epipolar lines
+    n1 = sqrt(sum(w1(1:2,:).^2, 1)); % sqrt(a^2 + b^2)
     w1 = bsxfun(@rdivide, w1, n1); % normalize
-    d1 = abs(sum(pts2 .* w1, 2));  % distance to line
+    d1 = abs(sum(pts2 .* w1, 1));  % distance to line
 
-    w2 = pts2*F'; % w2 - epipolar lines
-    n2 = sqrt(sum(w2(:,1:2).^2, 2)); % sqrt(a^2 + b^2)
+    w2 = F*pts2; % w2 - epipolar lines
+    n2 = sqrt(sum(w2(1:2,:).^2, 1)); % sqrt(a^2 + b^2)
     w2 = bsxfun(@rdivide, w2, n2); % normalize
-    d2 = abs(sum(pts2 .* w2, 2));  % distance to line
+    d2 = abs(sum(pts2 .* w2, 1));  % distance to line
 
     inlierIdxs = max(d1, d2) < tol;
 end
