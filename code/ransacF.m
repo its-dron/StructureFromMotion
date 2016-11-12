@@ -14,7 +14,7 @@ function [ F, bestInlierIdx ] = ransacF( pts1, pts2, M )
 %     points are inliers, and any other optimizations you made
 
 %% Tunable Parameters
-inlierRadius = 2; %pixel radius for inlier classification
+inlierRadius = 1; %pixel radius for inlier classification
 squaredRadius = inlierRadius^2;
 nItr = 1000; %Number of RANSAC to perform
 

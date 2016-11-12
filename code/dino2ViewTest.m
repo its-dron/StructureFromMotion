@@ -18,7 +18,7 @@ matchThresh = 1.5;
 
 dinoDir = fullfile('..','data','dino');
 im1Number = 1;
-im2Number = 2;
+im2Number = 3;
 im1Filename = ['dino' num2str(im1Number, '%04d') '.png'];
 im2Filename = ['dino' num2str(im2Number, '%04d') '.png'];
 im1FullPath = fullfile(dinoDir, im1Filename);
@@ -92,6 +92,7 @@ M = max([size(im1Gray), size(im2Gray)]); %max image dimension
 
 %% Debug, Check F by epipolar match gui
 if debug
+    figure;
     displayEpipolarF(im1Color, im2Color, F);
 end
 
