@@ -15,6 +15,7 @@ function [ F, bestInlierIdx ] = ransacF( pts1, pts2, M )
 
 %% Tunable Parameters
 inlierRadius = 2; %pixel radius for inlier classification
+squaredRadius = inlierRadius^2;
 nItr = 1000; %Number of RANSAC to perform
 
 %% Paramter Calculation
@@ -23,7 +24,6 @@ pts1H = [pts1'; ones(1, nPoints)];
 pts2H = [pts2'; ones(1, nPoints)];
 
 %% RANSAC ITERATION using 7pt algo
-bestF = [];
 bestInlierIdx = [];
 nBestInliers = 0;
 for i = 1:nItr
@@ -33,14 +33,8 @@ for i = 1:nItr
     [ Fs ] = sevenpoint( pts17, pts27, M );
     for j = 1: length(Fs)
         F = Fs{j};
-        Fp = F * pts1H;
-        distanceNumerator = abs(sum(pts2H .* Fp, 1));
-        distanceDenominator = sqrt(Fp(1,:).^2 + Fp(2,:).^2);
-        dist = distanceNumerator ./ distanceDenominator;
-        inlierIdx = dist < inlierRadius;
-        nInlier = sum(inlierIdx);
+        nInlier = countInliers(pts1H, pts2H, F, squaredRadius);
         if nInlier > nBestInliers
-            bestF = F;
             bestInlierIdx = inlierIdx;
             nBestInliers = nInlier;
         end
@@ -50,4 +44,26 @@ end
 %% Recalculate F with all inliers using the 8pt algo
 [ F ] = eightpoint( pts1(bestInlierIdx, :), pts2(bestInlierIdx, :), M );
 end
+
+% Count the number of inliers
+function [numInliers] = countInliers(pts1, pts2, F, tol)
+    numInliers = nnz( findInliers(pts1, pts2, F, tol) );
+end
+
+% Return a boolean array representing which points are inliers
+function [inlierIdxs] = findInliers(pts1, pts2, F, tol)
+    w1 = pts1*F'; % w1 - epipolar lines
+    n1 = sqrt(sum(w1(:,1:2).^2, 2)); % sqrt(a^2 + b^2)
+    w1 = bsxfun(@rdivide, w1, n1); % normalize
+    d1 = abs(sum(pts2 .* w1, 2));  % distance to line
+
+    w2 = pts2*F'; % w2 - epipolar lines
+    n2 = sqrt(sum(w2(:,1:2).^2, 2)); % sqrt(a^2 + b^2)
+    w2 = bsxfun(@rdivide, w2, n2); % normalize
+    d2 = abs(sum(pts2 .* w2, 2));  % distance to line
+
+    inlierIdxs = max(d1, d2) < tol;
+end
+
+
 
