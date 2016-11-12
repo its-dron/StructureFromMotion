@@ -62,7 +62,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Setup the VLFeat Toolbox
-VLFEATROOT = 'vlfeat-0.9.20';
+VLFEATROOT = fullfile('..','vlfeat-0.9.20');
 run(fullfile(VLFEATROOT, 'toolbox', 'vl_setup'));
 fprintf('VLFeat Version: %s.\n', vl_version);
 
@@ -77,3 +77,6 @@ vl_plotframe(features{1});
 figure;imagesc(im2color);
 hold on;
 vl_plotframe(features{2});
+
+%% Estimate F using RANSAC
+% [ F, bestInlierIdx ] = ransacF( pts1, pts2, M );
