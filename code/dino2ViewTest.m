@@ -99,3 +99,31 @@ end
 %% Calculate E Essential Matrix From Known Camera Intrinsics
 [ E ] = essentialMatrix( F, K1, K2 );
 
+%% Get camera projective matrices
+% M = K * [R|t] where [R|t] is 3d rotation and translation.
+% The camera matric M is sometimes denoted P in literature.
+M1 = K1 * eye(3,4);
+M2s = camera2(E);
+
+%% Select the correct M2
+for i = 1:4
+    M2 = K2*M2s(:,:,i);
+    [ P, error ] = triangulate( M1, pts1, M2, pts2 );
+    
+    %% Check if points are in front of camera and break early if possible
+    % check if points are in front of camera
+    if any(P(:,3) < 0) == false 
+        break;
+    elseif i==4
+        error('No valid M2 !?!');
+    end
+end
+
+%% Triangulate
+[ P, error ] = triangulate( M1, pts1(bestInlierIdx, :), ...
+                            M2, pts2(bestInlierIdx, :) );
+
+%% 3D Plot
+figure;
+scatter3(P(:,1), P(:,2), P(:,3), '.');
+camproj('perspective')
