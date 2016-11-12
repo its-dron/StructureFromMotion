@@ -16,10 +16,10 @@ end
 
 %% Form list
 files = dir(fullfile(folderPath,['*' fileExt]));
-imPaths = {files.name};
+imPaths = {files.name}';
 
 %% Concatenate names with folderpath
-if folderPath ~= '.'
+if ~strcmp(folderPath, '.')
     imPaths = fullfile(folderPath, imPaths);
 end
 end

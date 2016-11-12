@@ -1,7 +1,9 @@
-function SFM( folderPath )
+function SFM( imPaths, Ks )
 %SFM Generates 3D model given a folder of images of the model.
 %   Extreme WIP, just something to help us get started.
 %   Probably also take in Camera Parameters
+%   imagesPaths - cell array of image paths (nx1)
+%   Ks - cell array of camera intrinsic matrices (each 3x3) (nx1)
 
 %% User Parameters
 % Used
@@ -13,7 +15,6 @@ run(fullfile(VLFEATROOT, 'toolbox', 'vl_setup'));
 fprintf('VLFeat Version: %s.\n', vl_version);
 
 %% Get image file names and declare variables
-imPaths = getImPaths(folderPath);
 nImages = length(imPaths);
 
 %% SIFT
