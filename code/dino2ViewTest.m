@@ -11,6 +11,8 @@ close all
 clc
 clear variables
 
+debug = true;
+
 %% Set Paths (and User Parameters)
 matchThresh = 1.5;
 
@@ -73,15 +75,26 @@ fprintf('VLFeat Version: %s.\n', vl_version);
             SIFT( {im1FullPath, im2FullPath}, matchThresh );
         
 %% Debug Test Plot
-figure;imagesc(im1Color);
-hold on;
-vl_plotframe(features{1});
-figure;imagesc(im2Color);
-hold on;
-vl_plotframe(features{2});
+if debug
+    figure;imagesc(im1Color);
+    hold on;
+    vl_plotframe(features{1});
+    figure;imagesc(im2Color);
+    hold on;
+    vl_plotframe(features{2});
+end
 
 %% Estimate F using RANSAC
 pts1 = features{1}(1:2, matches{1,2}(1,:))'; % each row is an (x,y) coordinate
 pts2 = features{2}(1:2, matches{1,2}(2,:))';
 M = max([size(im1Gray), size(im2Gray)]); %max image dimension
 [ F, bestInlierIdx ] = ransacF( pts1, pts2, M );
+
+%% Debug, Check F by epipolar match gui
+if debug
+    displayEpipolarF(im1Color, im2Color, F);
+end
+
+%% Calculate E Essential Matrix From Known Camera Intrinsics
+[ E ] = essentialMatrix( F, K1, K2 );
+
