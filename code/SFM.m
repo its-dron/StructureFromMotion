@@ -8,7 +8,7 @@ function SFM( folderPath )
 matchThresh = 1.5; %default value 1.5
 
 %% Setup the VLFeat Toolbox
-VLFEATROOT = 'vlfeat-0.9.20';
+VLFEATROOT = fullfile('..', 'vlfeat-0.9.20');
 run(fullfile(VLFEATROOT, 'toolbox', 'vl_setup'));
 fprintf('VLFeat Version: %s.\n', vl_version);
 
