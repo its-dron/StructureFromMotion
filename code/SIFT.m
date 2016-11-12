@@ -7,6 +7,7 @@ if nargin<2
     matchThresh = 1.5;
 end
 
+peakThresh = 0.01;
 %% Variable Declaration
 nImages = length(imPaths);
 
@@ -24,7 +25,8 @@ for iIm = 1:nImages
     % The matrix f has a column for each frame.
     % A frame is a disk of center f(1:2), scale f(3) and orientation f(4).
     % descriptors
-    [features{iIm}, descriptors{iIm}] = vl_sift(imGray);
+    [features{iIm}, descriptors{iIm}] = vl_sift(imGray, ...
+            'PeakThresh', peakThresh);
 end
 
 %% Match Features Between Images
