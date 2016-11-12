@@ -7,7 +7,8 @@ if nargin<2
     matchThresh = 1.5;
 end
 
-peakThresh = 0.01;
+peakThresh = 3;
+
 %% Variable Declaration
 nImages = length(imPaths);
 
@@ -31,10 +32,10 @@ end
 
 %% Match Features Between Images
 % Can probably do iIm2 = iIm1+1:nImages or something more efficient instead
-for iIm1 = 1:nImages-1
+for iIm1 = 1:nImages
     for iIm2 = 1:nImages
         if iIm1==iIm2
-            break;
+            continue;
         end
         [matches{iIm1, iIm2}, scores{iIm1, iIm2}] = ...
                 vl_ubcmatch(descriptors{iIm1}, ...
