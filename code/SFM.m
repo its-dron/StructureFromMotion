@@ -16,6 +16,7 @@ fprintf('VLFeat Version: %s.\n', vl_version);
 
 %% Get image file names and declare variables
 nImages = length(imPaths);
+folderPath = fileparts(imPaths{1});
 
 %% SIFT
 SIFTFilename = fullfile(folderPath, 'SIFT.mat');
