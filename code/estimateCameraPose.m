@@ -5,6 +5,7 @@ function [ R, t ] = estimateCameraPose( imgPoints, worldPoints, K )
 %   imgPoints - 2xN matrix of image points
 %   worldPoints - 3xN matrix of world points
 %   K - camera intrinsic matrix
+
     N = size(worldPoints,2);
     
     % Precondition
