@@ -2,9 +2,9 @@ hemogenize = @(X) [X; ones(1,size(X,2))];
 dehemogenize = @(X) bsxfun(@rdivide, X(1:end-1,:), X(end,:));
 
 %% Generate camera matrices
-K = [10    0   0; ...
-       0  10   0; ...
-       0   0   1];
+K = [100    0   0; ...
+       0   100  0; ...
+       0    0   1];
 
 % Camera 1: at origin, facing Z axis so camera XY is world XY
 R1 = eye(3);
@@ -29,7 +29,6 @@ P3 = K*[R3, T3];
 
 %% Generate points in 3d space, remember camera is at 0,0,0 facing 0,0,1
 X = zeros(4,20);
-X(4,:) = 1;
 
 X(3,:) = 20;
 X(1,1:5) = 0:4;
@@ -38,16 +37,29 @@ X(1,10:20) = 0:10;
 X(2,10:20) = 3;
 X(3,10:20) = 20:-.5:15;
 
+% X = X + normrnd(0, .05, 4, 20);
+X(4,:) = 1;
 %% Project points into each camera
 % Note that K has camera center at [0,0], so pixel values may be negative.
 X1 = P1*X;
 X1 = bsxfun(@rdivide, X1(1:2,:), X1(3,:));
+X1 = X1 + normrnd(0, .01, 2, 20);
 
 X2 = P2*X;
 X2 = bsxfun(@rdivide, X2(1:2,:), X2(3,:));
+X2 = X2 + normrnd(0, .01, 2, 20);
 
 X3 = P3*X;
 X3 = bsxfun(@rdivide, X3(1:2,:), X3(3,:));
+X3 = X3 + normrnd(0, .01, 2, 20);
+
+
+%% Normalized image coordinates
+x1 = K\hemogenize(X1);
+
+x2 = K\hemogenize(X2);
+
+x3 = K\hemogenize(X3);
 
 %% Visualize points
 cla
