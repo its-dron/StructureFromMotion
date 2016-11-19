@@ -15,7 +15,6 @@ function [ F, bestInlierIdx ] = ransacF( pts1, pts2, M )
 
 %% Tunable Parameters
 inlierRadius = 1; %pixel radius for inlier classification
-squaredRadius = inlierRadius^2;
 nItr = 1000; %Number of RANSAC to perform
 
 %% Paramter Calculation
@@ -33,7 +32,7 @@ for i = 1:nItr
     [ Fs ] = sevenpoint( pts17, pts27, M );
     for j = 1: length(Fs)
         F = Fs{j};
-        inlierIdx = findInliers(pts1H, pts2H, F, squaredRadius);
+        inlierIdx = findInliers(pts1H, pts2H, F, inlierRadius);
         nInlier = nnz(inlierIdx);
         if nInlier > nBestInliers
             bestInlierIdx = inlierIdx;
@@ -48,7 +47,7 @@ end
 
 % Return a boolean array representing which points are inliers
 function [inlierIdxs] = findInliers(pts1, pts2, F, tol)
-    w1 = F*pts1; % w1 - epipolar lines
+    w1 = F'*pts1; % w1 - epipolar lines
     n1 = sqrt(sum(w1(1:2,:).^2, 1)); % sqrt(a^2 + b^2)
     w1 = bsxfun(@rdivide, w1, n1); % normalize
     d1 = abs(sum(pts2 .* w1, 1));  % distance to line
