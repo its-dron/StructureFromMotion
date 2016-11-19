@@ -105,7 +105,7 @@ end
 % M = K * [R|t] where [R|t] is 3d rotation and translation.
 % The camera matric M is sometimes denoted P in literature.
 M1 = K1 * eye(3,4);
-M2s = camera2(E);
+M2s = camera2(E, eye(3), zeros(3,1));
 
 %% Select the correct M2
 for i = 1:4
