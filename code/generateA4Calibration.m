@@ -6,6 +6,7 @@ function generateA4Calibration(destFilename)
     imPos = [0, 0, squareSideLength*nBoxes, squareSideLength*nBoxes];
     im = checkerboard(nBoxes);
     im = imresize(im, 50, 'nearest');
+    im = im < 0.5;
     imshow(im);
     set(h, ...
         'PaperUnits','centimeters', ...

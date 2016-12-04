@@ -7,6 +7,8 @@ function SFM( imPaths, Ks )
 
 %% User Parameters
 % Used
+imPaths = imPaths(1:3); %remove this later
+
 matchThresh = 1.5; %default value 1.5
 
 %% Setup the VLFeat Toolbox
@@ -32,13 +34,22 @@ else %Compute SIFT data
 end
 
 %% Initial 2 view stereo
-pts1 = features{1}(1:2,matches{1,2}(1,:));
-pts2 = features{2}(1:2,matches{1,2}(2,:));
-testIm = imread(imPaths{1});
-M = size(testIm);
+pts1 = features{1}(1:2,matches{1,2}(1,:))';
+pts2 = features{2}(1:2,matches{1,2}(2,:))';
+
+im1 = imread(imPaths{1});
+im2 = imread(imPaths{2});
+
+M = size(im1);
 M = max(M(1:2));
 
-[ F, bestInlierIdx ] = ransacF( pts1', pts2', M );
+figure;
+showMatchedFeatures(im1, im2, ...
+    pts1, pts2);
+
+%%
+
+[ F, bestInlierIdx ] = ransacF( pts1, pts2, M );
 [ E ] = essentialMatrix( F, Ks{1}, Ks{2} );
 
 matches{1,2}(:, ~bestInlierIdx) = []; %delete bad matches
@@ -59,7 +70,7 @@ for i = 1:4
         error('No valid M2 !?!');
     end
 end
-[ P, error ] = triangulate( M1, pts1, M2, pts2);
+[ P, error ] = triangulate( M1, pts1, M2, pts2, true);
 
 %% Add images iteratively
 

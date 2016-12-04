@@ -18,7 +18,7 @@ matchThresh = 1.5;
 
 dinoDir = fullfile('..','data','dino');
 im1Number = 1;
-im2Number = 2;
+im2Number = 3;
 im1Filename = ['dino' num2str(im1Number, '%04d') '.png'];
 im2Filename = ['dino' num2str(im2Number, '%04d') '.png'];
 im1FullPath = fullfile(dinoDir, im1Filename);
@@ -89,6 +89,7 @@ pts1 = features{1}(1:2, matches{1,2}(1,:))'; % each row is an (x,y) coordinate
 pts2 = features{2}(1:2, matches{1,2}(2,:))';
 M = max([size(im1Gray), size(im2Gray)]); %max image dimension
 [ F, bestInlierIdx ] = ransacF( pts1, pts2, M );
+
 pts1 = pts1(bestInlierIdx, :);
 pts2 = pts2(bestInlierIdx, :);
 

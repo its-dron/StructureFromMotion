@@ -6,9 +6,9 @@
 % known camera calibration matrices K
 
 %% Housekeeping
-% close all
-% clc
-% clear variables
+close all
+clc
+clear variables
 
 debug = true;
 
@@ -54,4 +54,4 @@ imPaths = getImPaths(dinoDir, dinoImExt);
 imPaths = imPaths(1:10);
 Ks = Ks(1:10);
 
-SFM( imPaths, Ks )
+SFM_MATLAB( imPaths, Ks )

@@ -1,4 +1,4 @@
-function [ P, error ] = triangulate( M1, p1, M2, p2 )
+function [ P, error ] = triangulate( M1, p1, M2, p2, plotFlag )
 % triangulate:
 %       M1 - 3x4 Camera Matrix 1
 %       p1 - Nx2 set of points
@@ -11,6 +11,10 @@ function [ P, error ] = triangulate( M1, p1, M2, p2 )
 
 nPoints = length(p1);
 P = zeros(nPoints, 4);
+
+if nargin < 5
+    plotFlag = false;
+end
         
 %% Iterate through points, calculating SVD
 for i = 1:nPoints
@@ -28,19 +32,29 @@ p1Hat = M1 * P';
 p1Hat = bsxfun(@rdivide, p1Hat(1:2,:), p1Hat(3,:)); %normalize
 p2Hat = M2 * P';
 p2Hat = bsxfun(@rdivide, p2Hat(1:2,:), p2Hat(3,:)); %normalize
-error = sum([sum((p1-p1Hat').^2, 2); sum((p2-p2Hat').^2, 2)]);
+p1Error = sum(sqrt(sum((p1-p1Hat').^2, 2)));
+p2Error = sum(sqrt(sum((p2-p2Hat').^2, 2)));
+error = sum([p1Error; p2Error]);
 
 %% Debug Plot
-% figure;
-% scatter(p1(:,1),p1(:,2),'o');
-% hold on
-% scatter(p1Hat(1,:), p1Hat(2,:),'x');
-% figure;
-% scatter(p2(:,1),p2(:,2),'o');
-% hold on
-% scatter(p2Hat(1,:),p2Hat(2,:),'x');
-% figure;
-% scatter3(P(:,1),P(:,2),P(:,3));
+if plotFlag
+    figure;
+    scatter(p1(:,1),p1(:,2),'o');
+    hold on
+    scatter(p1Hat(1,:), p1Hat(2,:),'x');
+    title(sprintf('Reprojection onto 1. Error: %f', p1Error));
+
+    figure;
+    scatter(p2(:,1),p2(:,2),'o');
+    hold on
+    scatter(p2Hat(1,:),p2Hat(2,:),'x');
+    title(sprintf('Reprojection onto 2. Error: %f', p2Error));
+    
+    figure;
+    scatter3(P(:,1),P(:,2),P(:,3));
+end
+
+
 
 %% Crop output
 P = P(:,1:3);
