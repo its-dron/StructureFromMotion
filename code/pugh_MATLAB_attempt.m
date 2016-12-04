@@ -320,10 +320,19 @@ helperPlotCameras(camPoses);
 % Exclude noisy 3-D world points.
 goodIdx = (reprojectionErrors < 5);
 
+goodPts = xyzPoints(goodIdx, :);
+betterIdx = goodPts(:,1) > loc1(1)-3 &  goodPts(:,1) < loc1(1)+7 & ...
+            goodPts(:,2) > loc1(2)-5 &  goodPts(:,2) < loc1(2)+4 & ...
+            goodPts(:,3) > loc1(3)-1 &  goodPts(:,3) < loc1(3)+15;
+goodPts = goodPts(betterIdx, :);
+ptCloud = pointCloud(goodPts);
+
 % Display the dense 3-D world points.
-pcshow(xyzPoints(goodIdx, :), 'VerticalAxis', 'y', 'VerticalAxisDir', 'down', ...
+pcshow(goodPts, 'VerticalAxis', 'y', 'VerticalAxisDir', 'down', ...
     'MarkerSize', 45);
 grid on;
+
+
 
 % Specify the viewing volume.
 loc1 = camPoses.Location{1};
