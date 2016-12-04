@@ -17,7 +17,7 @@ plotFirstValidPoints = false;
 plotSubsequentMatches = false;
 
 %% Set Paths (and User Parameters)
-imageDir = 'C:\Users\Brian\Desktop\templeRing5';
+imageDir = 'C:\Users\Brian\Desktop\templeRingMedium';
 dataImExt = 'png';
 
 % There is one line for each image. The format for each line is:
@@ -319,18 +319,24 @@ helperPlotCameras(camPoses);
 goodIdx = (reprojectionErrors < 5);
 
 % Display the dense 3-D world points.
-pcshow(xyzPoints(goodIdx, :), 'VerticalAxis', 'y', 'VerticalAxisDir', 'down', ...
+pcshow(xyzPoints(goodIdx, :), 'VerticalAxis', 'x', 'VerticalAxisDir', 'down', ...
     'MarkerSize', 45);
 grid on;
 
 % Specify the viewing volume.
 loc1 = camPoses.Location{1};
-xlim([loc1(1)-5, loc1(1)+4]);
-ylim([loc1(2)-5, loc1(2)+4]);
-zlim([loc1(3)-1, loc1(3)+20]);
+xlim([loc1(1)-2, loc1(1)+2]);
+ylim([loc1(2)-2, loc1(2)+8]);
+zlim([loc1(3), loc1(3)+12]);
 camorbit(0, -30);
 
 title('Dense Reconstruction');
+
+%% Mesh
+figure;
+goodPts = xyzPoints(goodIdx, :);
+shp = alphaShape(goodPts(:,1), goodPts(:,2), goodPts(:,3), 0.1);
+plot(shp);
 
 %% References
 %

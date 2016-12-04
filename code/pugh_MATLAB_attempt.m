@@ -327,9 +327,9 @@ grid on;
 
 % Specify the viewing volume.
 loc1 = camPoses.Location{1};
-xlim([loc1(1)-5, loc1(1)+4]);
+xlim([loc1(1)-3, loc1(1)+7]);
 ylim([loc1(2)-5, loc1(2)+4]);
-zlim([loc1(3)-1, loc1(3)+20]);
+zlim([loc1(3)-1, loc1(3)+15]);
 camorbit(0, -30);
 
 title('Dense Reconstruction');
